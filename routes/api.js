@@ -34,6 +34,8 @@ module.exports = function (app) {
     default: false}
  });
 
+ let Issue = mongoose.model('Issue', issueSchema);
+
   app.route('/api/issues/:project')
   
     .get(function (req, res){
