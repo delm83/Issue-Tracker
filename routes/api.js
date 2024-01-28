@@ -34,21 +34,23 @@ module.exports = function (app) {
     default: true}
  });
 
- let Issue = mongoose.model('Issue', issueSchema);
 
   app.route('/api/issues/:project')
   
-    .get(function (req, res){
+    .get(async (req, res)=>{
+      try{
       let project = req.params.project;
-      Issue.find((err, issues)=>{
-        return res.json(issues);
+      let Issue = mongoose.model(project, issueSchema);
+      await Issue.find((err, issue)=>{
+        return res.json(issue);
       });
-      
+    } catch(err){return res.json({error: err})}
     })
     
     .post(async (req, res)=>{
       try{
       let project = req.params.project;
+      let Issue = mongoose.model(project, issueSchema);
       let title = req.body.issue_title;
       let text = req.body.issue_text;
       let created_by = req.body.created_by;
