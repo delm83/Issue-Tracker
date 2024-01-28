@@ -9,16 +9,16 @@ module.exports = function (app) {
 
   let issueSchema = new Schema({
     title: {
-    type: String,
-    required: true,
-   },
+      type: String,
+      required: true
+    },
     text: {
-    type: String,
-    required: true
-   },
+      type: String,
+      required: true
+    },
     created_by: {
-    type: String,
-    required: true
+      type: String,
+      required: true
     },
     assigned_to: {
     type: String,
@@ -40,6 +40,9 @@ module.exports = function (app) {
   
     .get(function (req, res){
       let project = req.params.project;
+      Issue.find((err, issues)=>{
+        return res.json(issues);
+      });
       
     })
     
@@ -51,6 +54,10 @@ module.exports = function (app) {
       let created_by = req.body.created_by;
       let assigned_to = req.body.assigned_to;
       let status_text = req.body.status_text;
+
+      if(!title || !text || !created_by) {
+        return res.json({ error: 'required field(s) missing' });
+      }
 
       let inputIssue = new Issue({
         title: title,
@@ -71,12 +78,10 @@ module.exports = function (app) {
     
     .put(function (req, res){
       let project = req.params.project;
-      
     })
     
     .delete(function (req, res){
       let project = req.params.project;
-      
     });
     
 };
