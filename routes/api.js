@@ -8,11 +8,11 @@ module.exports = function (app) {
   let Schema = mongoose.Schema;
 
   let issueSchema = new Schema({
-    title: {
+    issue_title: {
       type: String,
       required: true
     },
-    text: {
+    issue_text: {
       type: String,
       required: true
     },
@@ -41,8 +41,12 @@ module.exports = function (app) {
       try{
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
-      await Issue.find((err, issue)=>{
-        return res.json(issue);
+      await Issue.find((err, issue_list)=>{
+        let log = [];
+        for(let i=0; i<issue_list.length; i++){
+          log.push({assigned_to: issue_list[i].assigned_to, status_text: issue_list[i].status_text, open: issue_list[i].open, _id: issue_list[i]._id, issue_title: issue_list[i].issue_title, issue_text: issue_list[i].issue_text, created_by: issue_list[i].created_by, created_on: issue_list[i].created_on, updated_on: issue_list[i].updated_on})
+        }
+        return res.json(log);
       });
     } catch(err){return res.json({error: err})}
     })
@@ -51,19 +55,19 @@ module.exports = function (app) {
       try{
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
-      let title = req.body.issue_title;
-      let text = req.body.issue_text;
+      let issue_title = req.body.issue_title;
+      let issue_text = req.body.issue_text;
       let created_by = req.body.created_by;
       let assigned_to = req.body.assigned_to;
       let status_text = req.body.status_text;
 
-      if(!title || !text || !created_by) {
+      if(!issue_title || !issue_text || !created_by) {
         return res.json({ error: 'required field(s) missing' });
       }
 
       let inputIssue = new Issue({
-        title: title,
-        text: text,
+        issue_title: issue_title,
+        issue_text: issue_text,
         created_by: created_by,
         assigned_to: assigned_to,
         status_text: status_text,
@@ -73,7 +77,7 @@ module.exports = function (app) {
 
     await inputIssue.save();
 
-    res.json({_id: inputIssue.id, title: inputIssue.title, text: inputIssue.text, created_by: inputIssue.created_by, assigned_to: inputIssue.assigned_to, status_text: inputIssue.status_text, created_on: inputIssue.created_on, updated_on: inputIssue.updated_on, open: inputIssue.open})
+    res.json({assigned_to: inputIssue.assigned_to, status_text: inputIssue.status_text, open: inputIssue.open, _id: inputIssue.id, issue_title: inputIssue.issue_title, issue_text: inputIssue.issue_text, created_by: inputIssue.created_by, created_on: inputIssue.created_on, updated_on: inputIssue.updated_on})
 
     }catch(err){return res.json({error: err})}
     })
