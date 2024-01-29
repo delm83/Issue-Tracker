@@ -37,19 +37,14 @@ module.exports = function (app) {
 
   app.route('/api/issues/:project')
   
-    .get(async (req, res)=>{
-      try{
-      let project = req.params.project;
-      let Issue = mongoose.model(project, issueSchema);
-      await Issue.find((err, issue_list)=>{
-        let log = [];
-        for(let i=0; i<issue_list.length; i++){
-          log.push({assigned_to: issue_list[i].assigned_to, status_text: issue_list[i].status_text, open: issue_list[i].open, _id: issue_list[i]._id, issue_title: issue_list[i].issue_title, issue_text: issue_list[i].issue_text, created_by: issue_list[i].created_by, created_on: issue_list[i].created_on, updated_on: issue_list[i].updated_on})
-        }
-        return res.json(log);
-      });
-    } catch(err){return res.json({error: err})}
-    })
+  .get(async (req, res)=>{
+    try{
+    let project = req.params.project;
+    let Issue = mongoose.model(project, issueSchema);
+    let issue_list = await Issue.find().select({__v: 0});
+      return res.json(issue_list);
+  } catch(err){return res.json({error: err})}
+  })
     
     .post(async (req, res)=>{
       try{
