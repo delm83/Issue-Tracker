@@ -50,6 +50,15 @@ module.exports = function (app) {
     let assigned_to = req.query.assigned_to;
     let created_on = req.query.created_on;
     let updated_on = req.query.updated_on;
+if (status_text!=undefined){queries.status_text = status_text;}
+if (open!=undefined){queries.open = open;}
+if (_id!=undefined){queries._id = _id;}
+if (issue_title!=undefined){queries.issue_title = issue_title;}
+if (issue_text!=undefined){queries.issue_text = issue_text;}
+if (created_by!=undefined){queries.created_by = created_by;}
+if (assigned_to!=undefined){queries.assigned_to = assigned_to;}
+if (created_on!=undefined){queries.created_on = created_on;}
+if (updated_on!=undefined){queries.updated_on = updated_on;}
     let Issue = mongoose.model(project, issueSchema);
     let issue_list = await Issue.find(queries).select({__v: 0});
       return res.json(issue_list);
