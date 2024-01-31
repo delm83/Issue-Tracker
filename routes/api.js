@@ -43,7 +43,7 @@ module.exports = function (app) {
     let query_list={"status_text":undefined, "open":undefined, "_id":undefined, "issue_title":undefined, "issue_text":undefined, "created_by":undefined, "assigned_to":undefined, "created_on":undefined, "updated_on":undefined}
     for(let field in query_list){
     query_list[field] = req.query[field];
-    if(query_list[field]==undefined){delete query_list[field];}
+    if(!query_list[field]){delete query_list[field];}
     }
     let Issue = mongoose.model(project, issueSchema);
     let issue_list = await Issue.find(query_list).select({__v: 0});
@@ -83,7 +83,10 @@ module.exports = function (app) {
     })
        
     .put(function (req, res){
+      try{
       let project = req.params.project;
+      let Issue = mongoose.model(project, issueSchema);
+      }catch(err){return res.json({error: err})}
     })
     
     .delete(function (req, res){
