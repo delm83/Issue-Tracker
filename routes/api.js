@@ -126,10 +126,10 @@ else{return res.json({ error: 'could not update', '_id': _id } );}
 
       Issue.findByIdAndRemove(_id, (err, issue)=> {
         if (err) {
-          return res.json({ error: 'could not delete' });
+          return res.json({ error: 'could not delete', '_id': _id });
         }
         else {
-          return res.json({ result: 'successfully deleted' });
+          return res.json({ result: 'successfully deleted', '_id': _id });
         }
     });
       }catch(err){return res.json({error: err})}
