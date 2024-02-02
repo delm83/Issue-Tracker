@@ -114,8 +114,25 @@ else{return res.json({ error: 'could not update', '_id': _id } );}
 }catch(err){return res.json({error: err})}
     })
     
-    .delete(function (req, res){
+    .delete(async (req, res)=>{
+      try{
       let project = req.params.project;
+      let Issue = mongoose.model(project, issueSchema);
+      let _id = req.body._id;
+
+      if(!_id) {
+        return res.json({ error: 'missing_id' });
+      }
+
+      Issue.findByIdAndRemove(_id, (err, issue)=> {
+        if (err) {
+          return res.json({ error: 'could not delete' });
+        }
+        else {
+          return res.json({ result: 'successfully deleted' });
+        }
+    });
+      }catch(err){return res.json({error: err})}
     });
     
 };
