@@ -111,7 +111,7 @@ await inputIssue.save();
 return res.json({ result: 'successfully updated', '_id': _id })
 }
 else{return res.json({ error: 'could not update', '_id': _id } );}
-}catch(err){return res.json({error: err})}
+}catch(err){return res.json({error: 'id not valid'})}
     })
     
     .delete(async (req, res)=>{

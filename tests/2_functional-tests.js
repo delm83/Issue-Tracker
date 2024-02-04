@@ -164,6 +164,20 @@ suite('Functional Tests', function() {
             assert.equal('no update field(s) sent',  res.body.error);
             done();
           });
+      });     test('Test PUT /update issue with invalid id', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .put('/api/issues/apitest')
+          .send({
+            _id: '015bfa29af7b37318ec98b0f6',
+            status_text: 'ok then'         
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal('id not valid',  res.body.error);
+            done();
+          });
       });
 
 });
