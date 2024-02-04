@@ -4,6 +4,7 @@ const assert = chai.assert;
 const server = require('../server');
 
 chai.use(chaiHttp);
+let _id;
 
 suite('Functional Tests', function() {
     this.timeout(5000);
@@ -26,6 +27,7 @@ suite('Functional Tests', function() {
             assert.equal('Jack', res.body.created_by);
             assert.equal('Jim', res.body.assigned_to);
             assert.equal('ongoing', res.body.status_text);
+            _id = res.body._id;
             done();
           });
       });
@@ -102,4 +104,66 @@ suite('Functional Tests', function() {
             done();
           });
       });
+      test('Test PUT /update one field on an issue', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .put('/api/issues/apitest')
+          .send({
+            _id: _id,
+            status_text: 'need another day to fix'
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal("successfully updated",  res.body.result);
+            done();
+          });
+      });
+      test('Test PUT /update multiple fields on an issue', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .put('/api/issues/apitest')
+          .send({
+            _id: _id,
+            status_text: 'change person issue referred to',
+            assigned_to: 'Alan'
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal("successfully updated",  res.body.result);
+            done();
+          });
+      });
+      test('Test PUT /update issue with missing id', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .put('/api/issues/apitest')
+          .send({
+            _id: '',
+            status_text: 'change person issue referred to',
+            assigned_to: 'John'
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal('missing_id',  res.body.error);
+            done();
+          });
+      });
+      test('Test PUT /update issue with no fields to update', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .put('/api/issues/apitest')
+          .send({
+            _id: _id           
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal('no update field(s) sent',  res.body.error);
+            done();
+          });
+      });
+
 });
