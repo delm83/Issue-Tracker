@@ -147,7 +147,7 @@ suite('Functional Tests', function() {
           })
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal('missing_id',  res.body.error);
+            assert.equal('missing _id',  res.body.error);
             done();
           });
       });
@@ -217,7 +217,7 @@ suite('Functional Tests', function() {
           })
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal('missing_id',  res.body.error);
+            assert.equal('missing _id',  res.body.error);
             done();
           });
       });

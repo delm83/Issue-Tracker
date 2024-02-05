@@ -20,13 +20,8 @@ module.exports = function (app) {
       type: String,
       required: true
     },
-    assigned_to: {
-    type: String,
-    defualt: ''
-    },
-    status_text: {
-    type: String,
-    default: ''},
+    assigned_to: String,
+    status_text: String,
     created_on: Date,
     updated_on: Date,
     open: {
@@ -65,6 +60,9 @@ module.exports = function (app) {
         return res.json({ error: 'required field(s) missing' });
       }
 
+      if(!assigned_to){assigned_to = ''}
+      if(!status_text){status_text = ''}
+
       let inputIssue = new Issue({
         issue_title: issue_title,
         issue_text: issue_text,
@@ -95,7 +93,7 @@ module.exports = function (app) {
       let open = req.body.open;
 
       if(!_id) {
-        return res.json({ error: 'missing_id' });
+        return res.json({ error: 'missing _id' });
       }
 
 let inputIssue = await Issue.findById(_id);
@@ -107,6 +105,7 @@ if(created_by){inputIssue.created_by = created_by}
 if(assigned_to){inputIssue.assigned_to = assigned_to}
 if(status_text){inputIssue.status_text = status_text}
 if(open){inputIssue.open = open}
+inputIssue.updated_on = new Date();
 await inputIssue.save();
 return res.json({ result: 'successfully updated', '_id': _id })
 }
@@ -121,7 +120,7 @@ else{return res.json({ error: 'could not update', '_id': _id } );}
       let _id = req.body._id;
 
       if(!_id) {
-        return res.json({ error: 'missing_id' });
+        return res.json({ error: 'missing _id' });
       }
 
       Issue.findByIdAndRemove(_id, (err, issue)=> {
@@ -132,7 +131,7 @@ else{return res.json({ error: 'could not update', '_id': _id } );}
           return res.json({ result: 'successfully deleted', '_id': _id });
         }
     });
-      }catch(err){return res.json({error: 'could not delete'})}
+      }catch(err){return res.json({error: 'could not delete', '_id': _id})}
     });
     
 };
