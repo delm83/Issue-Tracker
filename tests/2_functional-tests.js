@@ -179,5 +179,46 @@ suite('Functional Tests', function() {
             done();
           });
       });
-
+      test('Test DELETE /delete an issue', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .delete('/api/issues/apitest')
+          .send({
+            _id: _id
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal("successfully deleted",  res.body.result);
+            done();
+          });
+      });
+      test('Test DELETE /delete an invalid id', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .delete('/api/issues/apitest')
+          .send({
+            _id: '015bfa29af7b37318ec98b0f6'
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal('id not valid',  res.body.error);
+            done();
+          });
+      });
+      test('Test DELETE /delete with missing id', function (done) {
+        chai
+          .request(server)
+          .keepOpen()
+          .delete('/api/issues/apitest')
+          .send({
+            _id: ''
+          })
+          .end(function (err, res) {
+            assert.equal(res.status, 200);
+            assert.equal('missing_id',  res.body.error);
+            done();
+          });
+      });
 });
