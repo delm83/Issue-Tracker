@@ -36,8 +36,6 @@ module.exports = function (app) {
     default: true}
  });
 
- let _id;
-
 
   app.route('/api/issues/:project')
   
@@ -133,8 +131,8 @@ module.exports = function (app) {
           return res.json({ error: 'missing _id' });
         }
     
-        Issue.findByIdAndRemove(_id, error =>  {
-          if(error){return res.json({ error: 'could not delete', '_id': _id });}
+        Issue.findByIdAndRemove(_id, (error, removedItem) =>  {
+          if(error||!removedItem){return res.json({ error: 'could not delete', '_id': _id });}
           else{
             return res.json({ result: 'successfully deleted', '_id': _id });
           }
