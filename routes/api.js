@@ -121,6 +121,7 @@ return res.json({ result: 'successfully updated', '_id': _id })
     })
   
     .delete(async (req, res)=>{
+      try{
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
       let _id = req.body._id;
@@ -129,13 +130,12 @@ return res.json({ result: 'successfully updated', '_id': _id })
         return res.json({ error: 'missing _id' });
       }
   
-      Issue.findByIdAndRemove(_id, (err)=> {
-        if (err) {
-          return res.json({ error: 'could not delete', '_id': _id });
-        }
-        else {
+      Issue.findByIdAndRemove(_id, error =>  {
+        if(error){return res.json({ error: 'could not delete', '_id': _id });}
+        else{
           return res.json({ result: 'successfully deleted', '_id': _id });
         }
-    });
+      });
+  }catch(err){return res.json({ error: 'caught error' });}
     });
   };
