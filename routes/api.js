@@ -83,8 +83,7 @@ module.exports = function (app) {
     })
        
     .put(async (req, res)=>{
-      try{
-
+    
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
       _id = req.body._id;
@@ -99,8 +98,8 @@ module.exports = function (app) {
         return res.json({ error: 'missing _id' });
       }
 
-Issue.findById(_id, (error, issue)=>{
-if(error){return res.json({error: 'could not update', '_id': _id})}
+Issue.findById(_id, (err, issue)=>{
+if(err){return res.json({error: 'could not update', '_id': _id})}
 if(!issue_title&&!issue_text&&!created_by&&!assigned_to&&!status_text&!open){return res.json({ error: 'no update field(s) sent', '_id': _id });}
 if(issue_title){issue.issue_title = issue_title}
 if(issue_text){issue.issue_text = issue_text}
@@ -109,14 +108,15 @@ if(assigned_to){issue.assigned_to = assigned_to}
 if(status_text){issue.status_text = status_text}
 if(open){issue.open = open}
 issue.updated_on = new Date();
-issue.save();
+issue.save((err, updatedIssue)=>{
+  if(err){return console.log(err);
+  done(null, updatedIssue)}
+});
 return res.json({ result: 'successfully updated', '_id': _id })
     });
-}catch(err){return res.json({error: err})}
     })
   
     .delete(async (req, res)=>{
-      try{
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
       _id = req.body._id;
@@ -125,15 +125,13 @@ return res.json({ result: 'successfully updated', '_id': _id })
         return res.json({ error: 'missing _id' });
       }
   
-      Issue.findByIdAndRemove(_id, (error, issue)=> {
-        if (error) {
+      Issue.findByIdAndRemove(_id, (err, issue)=> {
+        if (err) {
           return res.json({ error: 'could not delete', '_id': _id });
         }
         else {
           return res.json({ result: 'successfully deleted', '_id': _id });
         }
     });
-      }catch(err){return res.json({error: err})}
     });
-    
-};
+    };
