@@ -104,8 +104,8 @@ module.exports = function (app) {
         }
   
   Issue.findById(_id, (error, inputIssue)=>{
-  if(error||!inputIssue){return res.json({ error: 'could not update', '_id': _id})}
   if(!issue_title&&!issue_text&&!created_by&&!assigned_to&&!status_text&!open){return res.json({ error: 'no update field(s) sent', '_id': _id });}
+  if(error||!inputIssue){return res.json({ error: 'could not update', '_id': _id})} 
   if(issue_title){inputIssue.issue_title = issue_title}
   if(issue_text){inputIssue.issue_text = issue_text}
   if(created_by){inputIssue.created_by = created_by}
