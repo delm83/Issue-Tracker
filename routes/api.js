@@ -10,18 +10,25 @@ module.exports = function (app) {
   let issueSchema = new Schema({
     issue_title: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     issue_text: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
     created_by: {
       type: String,
-      required: true
+      required: true,
+      default: ''
     },
-    assigned_to: String,
-    status_text: String,
+    assigned_to: {
+      type: String,
+      default: ''},
+    status_text: {
+      type: String,
+      default: ''},
     created_on: Date,
     updated_on: Date,
     open: {
@@ -86,7 +93,7 @@ module.exports = function (app) {
     
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
-      _id = req.body._id;
+      let _id = req.body._id;
       let issue_title = req.body.issue_title;
       let issue_text = req.body.issue_text;
       let created_by = req.body.created_by;
@@ -108,9 +115,9 @@ if(assigned_to){issue.assigned_to = assigned_to}
 if(status_text){issue.status_text = status_text}
 if(open){issue.open = open}
 issue.updated_on = new Date();
-issue.save((err, updatedIssue)=>{
+issue.save((err)=>{
   if(err){return console.log(err);
-  done(null, updatedIssue)}
+  }
 });
 return res.json({ result: 'successfully updated', '_id': _id })
     });
@@ -119,13 +126,13 @@ return res.json({ result: 'successfully updated', '_id': _id })
     .delete(async (req, res)=>{
       let project = req.params.project;
       let Issue = mongoose.model(project, issueSchema);
-      _id = req.body._id;
+      let _id = req.body._id;
   
       if(!_id) {
         return res.json({ error: 'missing _id' });
       }
   
-      Issue.findByIdAndRemove(_id, (err, issue)=> {
+      Issue.findByIdAndRemove(_id, (err)=> {
         if (err) {
           return res.json({ error: 'could not delete', '_id': _id });
         }
