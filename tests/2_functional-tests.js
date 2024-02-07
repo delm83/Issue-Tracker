@@ -175,7 +175,7 @@ suite('Functional Tests', function() {
           })
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal('id not valid',  res.body.error);
+            assert.equal('could not update',  res.body.error);
             done();
           });
       });
@@ -203,7 +203,7 @@ suite('Functional Tests', function() {
           })
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal('id not valid',  res.body.error);
+            assert.equal('could not delete',  res.body.error);
             done();
           });
       });
