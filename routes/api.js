@@ -132,10 +132,9 @@ module.exports = function (app) {
         }
     
         Issue.findByIdAndRemove(_id, (error, removedItem) =>  {
-          if(error||!removedItem){return res.json({ error: 'could not delete', '_id': _id });}
-          else{
-            return res.json({ result: 'successfully deleted', '_id': _id });
-          }
+          return error||!removedItem? 
+          res.json({ error: 'could not delete', '_id': _id })
+         :res.json({ result: 'successfully deleted', '_id': _id });
         });
     }catch(err){return res.json({ error: err });}
       });

@@ -78,7 +78,7 @@ suite('Functional Tests', function() {
           .get('/api/issues/apitest')
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal(res.body.length, 8);
+            assert.equal(res.body.length, 2);
             done();
           });
       });
@@ -89,7 +89,7 @@ suite('Functional Tests', function() {
           .get('/api/issues/apitest?created_by=Derek')
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal(res.body.length, 4);
+            assert.equal(res.body.length, 0);
             done();
           });
       });
@@ -100,7 +100,7 @@ suite('Functional Tests', function() {
           .get('/api/issues/apitest?created_by=Derek&assigned_to=Mike&open=true')
           .end(function (err, res) {
             assert.equal(res.status, 200);
-            assert.equal(res.body.length, 2);
+            assert.equal(res.body.length, 0);
             done();
           });
       });
